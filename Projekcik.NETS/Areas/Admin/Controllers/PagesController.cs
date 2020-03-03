@@ -76,6 +76,26 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
             TempData["SM"] = "Dodałeś nową stronę";
             return RedirectToAction("AddPage");
         }
+        //GET Admin/Pages/EditPages
+        [HttpGet]
+        public ActionResult EditPage(int id)
+        {
+            //deklaracja viewModel
+            PageVM model;
 
+            using (Db db = new Db())
+            {
+                //pobieramy strone o przekazanym id
+                PageDTO dto = db.Pages.Find(id);
+                //sprawdzamy czy taka strona istenieje
+                if(dto == null)
+                {
+                    return Content("Strona nie istnieje");
+                }
+                //mamy w pagevm konstruktor ktory dostaje dto i przypisuje caly model
+                model = new PageVM(dto);
+            }
+                return View(model);
+        }
     }
 }
