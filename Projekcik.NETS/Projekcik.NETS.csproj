@@ -133,10 +133,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Data\SidebarDTO.cs" />
     <Compile Include="Models\Data\DB.cs" />
     <Compile Include="Models\Data\PageDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\Pages\PageVM.cs" />
+    <Compile Include="Views\Pages\SidebarVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\CmsShop.mdf" />
@@ -160,6 +162,8 @@
     <Content Include="Areas\Admin\Views\Pages\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Pages\AddPage.cshtml" />
     <Content Include="Areas\Admin\Views\Pages\EditPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Pages\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Pages\EditSidebar.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
