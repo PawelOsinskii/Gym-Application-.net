@@ -1,5 +1,7 @@
 ﻿using Projekcik.NETS.Models.Data;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
+
 namespace Projekcik.NETS.Views.Pages
 {
     public class PageVM
@@ -29,6 +31,7 @@ namespace Projekcik.NETS.Views.Pages
         [Required]
         [StringLength(int.MaxValue, MinimumLength = 3)]
         [Display(Name = "zawartość strony")]
+        [AllowHtml]
         public string Body { get; set; }
         public int Sorting { get; set; }
         [Display(Name = "pasek boczny")]

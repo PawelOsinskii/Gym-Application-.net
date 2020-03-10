@@ -1,4 +1,5 @@
 ﻿using Projekcik.NETS.Models.Data;
+using System.Web.Mvc;
 
 namespace Projekcik.NETS.Views.Pages
 {
@@ -17,6 +18,7 @@ namespace Projekcik.NETS.Views.Pages
 
         }
         public int Id { get; set; }
+        [AllowHtml] 
         public string Body { get; set; }
     }
 }
