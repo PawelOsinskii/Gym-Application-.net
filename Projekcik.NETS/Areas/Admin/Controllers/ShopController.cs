@@ -1,4 +1,5 @@
-﻿using Projekcik.NETS.Models.Data;
+﻿using Projekcik.NETS.Models;
+using Projekcik.NETS.Models.Data;
 using Projekcik.NETS.Models.ViewModels.Shop;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,35 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
             }
 
             return View(categoryVMList);
+        }
+        // POST: Admin/Shop/AddNewCategory
+        [HttpPost]
+        public string AddNewCategory(string catName)
+        {
+            // Deklaracja id
+            string id;
+
+            using (Db db = new Db())
+            {
+                // sprawdzenie czy nazwa kategorii jest unikalna
+                if (db.Categories.Any(x => x.Name == catName))
+                    return "tytulzajety";
+
+                // Inicjalizacja DTO
+                CategoryDTO dto = new CategoryDTO();
+                dto.Name = catName;
+                dto.Slug = catName.Replace(" ", "-").ToLower();
+                dto.Sorting = 1000;
+
+                // zapis do bazy
+                db.Categories.Add(dto);
+                db.SaveChanges();
+
+                // pobieramy id
+                id = dto.Id.ToString();
+            }
+
+            return id;
         }
     }
 }
