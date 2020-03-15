@@ -1,7 +1,8 @@
-﻿using Projekcik.NETS.Models.Data;
+﻿
+using Projekcik.NETS.Models.Data;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.WebPages.Html;
+using System.Web.Mvc;
 
 namespace Projekcik.NETS.Areas.Admin.Views.Shop
 {
@@ -26,10 +27,13 @@ namespace Projekcik.NETS.Areas.Admin.Views.Shop
 
         public int Id { get; set; }
         [Required]
+        [Display(Name = "Nazwa")]
         public string Name { get; set; }
         public string slug { get; set; }
         [Required]
+        [Display(Name = "Opis")]
         public int Description { get; set; }
+        [Display(Name = "Cena")]
         public decimal Price { get; set; }
         public string CategoryName { get; set; }
         [Required]

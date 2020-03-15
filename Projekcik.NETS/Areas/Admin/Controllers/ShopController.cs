@@ -1,4 +1,5 @@
-﻿using Projekcik.NETS.Models;
+﻿using Projekcik.NETS.Areas.Admin.Views.Shop;
+using Projekcik.NETS.Models;
 using Projekcik.NETS.Models.Data;
 using Projekcik.NETS.Models.ViewModels.Shop;
 using System.Collections.Generic;
@@ -121,6 +122,24 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
 
 
                 return "ok";
+        }
+
+        // GET: Admin/Shop/AddProduct
+        [HttpGet]
+        public ActionResult AddProduct()
+        {
+
+            //inicjalizacaja model
+            ProductVM model = new ProductVM();  
+
+            //pobieramy liste kategorii
+            using (Db db = new Db())
+            {
+                model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+
+            }
+
+            return View(model);
         }
 
     }
