@@ -32,7 +32,7 @@ namespace Projekcik.NETS.Areas.Admin.Views.Shop
         public string slug { get; set; }
         [Required]
         [Display(Name = "Opis")]
-        public int Description { get; set; }
+        public string Description { get; set; }
         [Display(Name = "Cena")]
         public decimal Price { get; set; }
         public string CategoryName { get; set; }
