@@ -1,4 +1,5 @@
-﻿using Projekcik.NETS.Areas.Admin.Views.Shop;
+﻿using PagedList;
+using Projekcik.NETS.Areas.Admin.Views.Shop;
 using Projekcik.NETS.Models;
 using Projekcik.NETS.Models.Data;
 using Projekcik.NETS.Models.ViewModels.Shop;
@@ -262,6 +263,43 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
                 #endregion
                 return RedirectToAction("AddProduct");
 
-        }   
+        }
+
+        // GET: Admin/Shop/Products
+        [HttpGet]
+        public ActionResult Products(int? page, int? catId)
+        {
+            // Deklaracja listy Produktów
+            List<ProductVM> listOfProductVM;
+
+            // Ustawiamy numer strony
+            var pageNumber = page ?? 1;
+
+            using (Db db = new Db())
+            {
+                // inicjalizacja listy produktów
+                listOfProductVM = db.Products.ToArray()
+                                    .Where(x => catId == null || catId == 0 || x.CategoryId == catId)
+                                    .Select(x => new ProductVM(x))
+                                    .ToList();
+
+                // lista kategori do dropDownList
+                ViewBag.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+
+                // ustawiamy wybrana ketegorię
+                ViewBag.SelectedCat = catId.ToString();
+            }
+            //ustawienie stronnicowania
+
+            var onePageOfProducts = listOfProductVM.ToPagedList(pageNumber, 3);
+
+            ViewBag.OnePageOfProducts = onePageOfProducts;
+
+                //zwrócić widok z listą
+                
+            
+
+            return View(listOfProductVM);
+        }
     }
 }
