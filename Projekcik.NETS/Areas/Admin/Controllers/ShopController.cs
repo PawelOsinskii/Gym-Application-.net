@@ -302,7 +302,7 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
             return View(listOfProductVM);
         }
 
-        // Post: Admin/Shop/EditProduct
+        // GET: Admin/Shop/EditProduct
         [HttpGet]
         public ActionResult EditProduct(int id)
         {
@@ -333,5 +333,66 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
             }
             return View(model);
         }
+
+        // Post: Admin/Shop/EditProduct
+        [HttpPost]
+        public ActionResult EditProduct(ProductVM model, HttpPostedFileBase file)
+        {
+            // pobranie id produktu
+            int id = model.Id;
+
+            // pobranie kategorii dla listy rozwijanej
+            using (Db db = new Db())
+            {
+                model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+            }
+
+            // ustawiamy zdjecia
+            model.GalleryImages = Directory.EnumerateFiles(Server.MapPath("~/Images/Uploads/Products/" + id + "/Gallery/Thumbs"))
+                                            .Select(fn => Path.GetFileName(fn));
+
+            // sprawdzamy model state
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // sprawdzenie unikalnosci nazwy produktu
+            using (Db db = new Db())
+            {
+                if (db.Products.Where(x => x.Id != id).Any(x => x.Name == model.Name))
+                {
+                    ModelState.AddModelError("", "Ta nazwa produktu jest zajęta");
+                    return View(model);
+                }
+            }
+
+            // Edycja produktu i zapis na bazie
+            using (Db db = new Db())
+            {
+                ProductDTO dto = db.Products.Find(id);
+                dto.Name = model.Name;
+                dto.slug = model.Name.Replace(" ", "-").ToLower();
+                dto.Description = model.Description;
+                dto.Price = model.Price;
+                dto.CategoryId = model.CategoryId;
+                dto.ImageName = model.ImageName;
+
+                CategoryDTO catDto = db.Categories.FirstOrDefault(x => x.Id == model.CategoryId);
+                dto.CategoryName = catDto.Name;
+
+                db.SaveChanges();
+            }
+
+            // ustawienie TempData
+            TempData["SM"] = "Edytowałeś produkt";
+
+            #region Image Upload
+
+            #endregion 
+
+            return RedirectToAction("EditProduct");
+        }
+
     }
 }
