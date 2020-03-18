@@ -41,6 +41,6 @@ namespace Projekcik.NETS.Areas.Admin.Views.Shop
         public string ImageName { get; set; }
 
         public IEnumerable<SelectListItem> Categories { get; set; }
-        public IEnumerable<string> GalerryImages { get; set; }
+        public IEnumerable<string> GalleryImages { get; set; }
     }
 }
