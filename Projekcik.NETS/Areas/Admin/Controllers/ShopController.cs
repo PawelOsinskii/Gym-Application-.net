@@ -453,5 +453,26 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
             return RedirectToAction("EditProduct");
         }
 
+
+        // GET: Admin/Shop/DeleteProduct
+        public ActionResult DeleteProduct(int id)
+        {
+
+            //usuniecie produktu z bazy
+            using (Db db = new Db())
+            {
+                ProductDTO dto = db.Products.Find(id);
+                db.Products.Remove(dto);
+                db.SaveChanges();
+            }
+            //usuniecie folderu produktu
+            var orginalDirectory = new DirectoryInfo(string.Format("{0}Images\\Upload", Server.MapPath(@"\")));
+            var path = Path.Combine(orginalDirectory.ToString(), "Prodcuts\\" + id.ToString());
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+
+                
+            return RedirectToAction("Products");
+        }
     }
 }
