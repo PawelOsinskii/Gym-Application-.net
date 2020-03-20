@@ -125,7 +125,7 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
             }
 
 
-                return "ok";
+            return "ok";
         }
 
         // GET: Admin/Shop/AddProduct
@@ -134,7 +134,7 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
         {
 
             //inicjalizacaja model
-            ProductVM model = new ProductVM();  
+            ProductVM model = new ProductVM();
 
             //pobieramy liste kategorii
             using (Db db = new Db())
@@ -150,76 +150,76 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult AddProduct(ProductVM model, HttpPostedFileBase file)
         {
-            
-                // sprawdzamy model state
-                if (!ModelState.IsValid)
-                {
-                    using (Db db = new Db())
-                    {
-                        model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
-                        return View(model);
-                    }
-                }
 
-                // sprawdzenie czy nazwa produktu jest unikalna
+            // sprawdzamy model state
+            if (!ModelState.IsValid)
+            {
                 using (Db db = new Db())
                 {
-                    if (db.Products.Any(x => x.Name == model.Name))
-                    {
-                        model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
-                        ModelState.AddModelError("", "Ta nazwa produktu jest zajęta!");
-                        return View(model);
-                    }
+                    model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                    return View(model);
                 }
+            }
 
-                // deklaracja product id
-                int id;
-
-                // dodawanie produktu i zapis na bazie
-                using (Db db = new Db())
+            // sprawdzenie czy nazwa produktu jest unikalna
+            using (Db db = new Db())
+            {
+                if (db.Products.Any(x => x.Name == model.Name))
                 {
-                    ProductDTO product = new ProductDTO();
-                    product.Name = model.Name;
-                    product.slug = model.Name.Replace(" ", "-").ToLower();
-                    product.Description = model.Description;
-                    product.Price = model.Price;
-                    product.CategoryId = model.CategoryId;
-
-                    CategoryDTO catDto = db.Categories.FirstOrDefault(x => x.Id == model.CategoryId);
-                    product.CategoryName = catDto.Name;
-
-                    db.Products.Add(product);
-                    db.SaveChanges();
-
-                    // pobranie id dodanego produktu
-                    id = product.Id;
+                    model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                    ModelState.AddModelError("", "Ta nazwa produktu jest zajęta!");
+                    return View(model);
                 }
+            }
 
-                // ustawiamy komunikat 
-                TempData["SM"] = "Dodałeś produkt";
+            // deklaracja product id
+            int id;
 
-                #region Upload image
+            // dodawanie produktu i zapis na bazie
+            using (Db db = new Db())
+            {
+                ProductDTO product = new ProductDTO();
+                product.Name = model.Name;
+                product.slug = model.Name.Replace(" ", "-").ToLower();
+                product.Description = model.Description;
+                product.Price = model.Price;
+                product.CategoryId = model.CategoryId;
 
-                //utworzenei potrzebnej struktury katalogow
+                CategoryDTO catDto = db.Categories.FirstOrDefault(x => x.Id == model.CategoryId);
+                product.CategoryName = catDto.Name;
 
-                var originalDirectory = new DirectoryInfo(string.Format("{0}Images\\Uploads", Server.MapPath(@"\")));
+                db.Products.Add(product);
+                db.SaveChanges();
 
-                var pathString1 = Path.Combine(originalDirectory.ToString(), "Products");
-                var pathString2 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString());
-                var pathString3 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Thumbs");
-                var pathString4 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery");
-                var pathString5 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery\\Thumbs");
+                // pobranie id dodanego produktu
+                id = product.Id;
+            }
 
-                if (!Directory.Exists(pathString1))
-                    Directory.CreateDirectory(pathString1);
-                if (!Directory.Exists(pathString2))
-                    Directory.CreateDirectory(pathString2);
-                if (!Directory.Exists(pathString3))
-                    Directory.CreateDirectory(pathString3);
-                if (!Directory.Exists(pathString4))
-                    Directory.CreateDirectory(pathString4);
-                if (!Directory.Exists(pathString5))
-                    Directory.CreateDirectory(pathString5);
+            // ustawiamy komunikat 
+            TempData["SM"] = "Dodałeś produkt";
+
+            #region Upload image
+
+            //utworzenei potrzebnej struktury katalogow
+
+            var originalDirectory = new DirectoryInfo(string.Format("{0}Images\\Uploads", Server.MapPath(@"\")));
+
+            var pathString1 = Path.Combine(originalDirectory.ToString(), "Products");
+            var pathString2 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString());
+            var pathString3 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Thumbs");
+            var pathString4 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery");
+            var pathString5 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery\\Thumbs");
+
+            if (!Directory.Exists(pathString1))
+                Directory.CreateDirectory(pathString1);
+            if (!Directory.Exists(pathString2))
+                Directory.CreateDirectory(pathString2);
+            if (!Directory.Exists(pathString3))
+                Directory.CreateDirectory(pathString3);
+            if (!Directory.Exists(pathString4))
+                Directory.CreateDirectory(pathString4);
+            if (!Directory.Exists(pathString5))
+                Directory.CreateDirectory(pathString5);
 
             if (file != null && file.ContentLength > 0)
             {
@@ -238,7 +238,7 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
                         ModelState.AddModelError("", "Obraz nie został przesłany, nie odpowiednie roższerzenie pliku!");
                         return View(model);
                     }
-                    
+
                 }
                 //inicjalizacja nazwy obrazka
                 string imageName = file.FileName;
@@ -260,8 +260,8 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
                 img.Save(path2);
             }
 
-                #endregion
-                return RedirectToAction("AddProduct");
+            #endregion
+            return RedirectToAction("AddProduct");
 
         }
 
@@ -295,9 +295,9 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
 
             ViewBag.OnePageOfProducts = onePageOfProducts;
 
-                //zwrócić widok z listą
-                
-            
+            //zwrócić widok z listą
+
+
 
             return View(listOfProductVM);
         }
@@ -327,7 +327,7 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
                 model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
 
                 //ustawiamy zdjecia
-                
+
                 model.GalleryImages = Directory.EnumerateFiles(Server.MapPath("~/Images/Uploads/Products/" + id + "/Gallery/Thumbs"))
                                                 .Select(fn => Path.GetFileName(fn));
             }
@@ -471,8 +471,40 @@ namespace Projekcik.NETS.Areas.Admin.Controllers
             if (Directory.Exists(path))
                 Directory.Delete(path, true);
 
-                
+
             return RedirectToAction("Products");
+        }
+
+        // Post: Admin/Shop/SaveGalleryImages
+        [HttpPost]
+        public ActionResult SaveGalleryImages(int id)
+        {
+            // petla po obrazkach
+            foreach (string item in Request.Files)
+            {
+                //inicjalizacja 
+                HttpPostedFileBase file = Request.Files[item];
+                if (file != null && file.ContentLength > 0)
+                {
+                    //utworzenei potrzebnej struktury katalogow
+
+                    var originalDirectory = new DirectoryInfo(string.Format("{0}Images\\Uploads", Server.MapPath(@"\")));
+
+
+                    string pathString1 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery");
+                    string pathString2 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery\\Thumbs");
+
+                    var path1 = string.Format("{0}\\{1}", pathString1, file.FileName);
+                    var path2 = string.Format("{0}\\{1}", pathString2, file.FileName);
+                    // zapis obrazkow i miniaturek
+                    file.SaveAs(path1);
+                    WebImage img = new WebImage(file.InputStream);
+                    img.Resize(200, 200);
+                    img.Save(path2);
+
+                }
+            }
+            return View();
         }
     }
 }
