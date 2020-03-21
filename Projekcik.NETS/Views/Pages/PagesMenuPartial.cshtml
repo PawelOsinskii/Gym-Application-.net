@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Projekcik.NETS.Views.Pages.PageVM>
+
+
+
+@foreach (var item in Model)
+{
+    <li>
+        <a href="/@item.Slug"><i class="fa fa-dashboard"></i>@item.Title</a>
+    </li>
+}
