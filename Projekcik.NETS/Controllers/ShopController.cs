@@ -4,6 +4,7 @@ using Projekcik.NETS.Models.Data;
 using Projekcik.NETS.Models.ViewModels.Shop;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -72,6 +73,38 @@ namespace Projekcik.NETS.Controllers
 
             // zwracamy widok z lista produktów z danej kategorii
             return View(productVMList);
+        }
+
+
+        //GET: /shop/product-szczegoly/name
+        [ActionName("product-details")]
+        public ActionResult ProductDetails(string name)
+        {
+            //deklaracja productVM i product DTO
+
+            ProductVM model;
+            ProductDTO dto;
+            //inicjalizacja product.Id
+            int id = 0;
+            using(Db db = new Db())
+            {
+                //sprawdzamy czy produkt istnieje
+                if(!db.Products.Any(x=> x.slug.Equals(name)))
+                    {
+                    return RedirectToAction("Index", "Shop");
+                }
+                //inicjalizacja prodcut dto
+                dto = db.Products.Where(x => x.slug == name).FirstOrDefault();
+
+                id = dto.Id;
+                //model
+                model = new ProductVM(dto);
+
+            }
+            //pobieramy galerie zdjęć dla wybranego produktu
+            model.GalleryImages = Directory.EnumerateFiles(Server.MapPath("~/Images/Uploads/Products/" + id + "/Gallery/Thumbs")).Select(fn => Path.GetFileName(fn));
+
+            return View("ProductDetails", model);
         }
     }
 }
