@@ -69,17 +69,20 @@ namespace Projekcik.NETS.Controllers
             return PartialView(pageVMList);
         }
 
+
         public ActionResult SidebarPartial()
         {
-            //deklarujemy model
+            // deklarujemy model 
             SidebarVM model;
-            //inicjalizacja modelu
+
+            // Inicjalizujemy model
             using (Db db = new Db())
             {
                 SidebarDTO dto = db.Sidebar.Find(1);
                 model = new SidebarVM(dto);
-
             }
+
+            // zwracamy partial z modelem
             return PartialView(model);
         }
     }
