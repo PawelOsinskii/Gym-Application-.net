@@ -26,7 +26,7 @@ namespace Projekcik.NETS.Controllers
             decimal total = 0m;
             foreach (var item in cart)
             {
-                total += item.Price;
+                total += item.Total;
             }
             ViewBag.GrandTotal = total;
 
@@ -54,6 +54,8 @@ namespace Projekcik.NETS.Controllers
                     quantity += item.Quantity;
                     price += item.Quantity * item.Price;
                 }
+                model.Quantity = quantity;
+                model.Price = price;
             }
             else
             {
