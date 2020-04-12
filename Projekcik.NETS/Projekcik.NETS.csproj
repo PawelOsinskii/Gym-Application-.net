@@ -137,8 +137,10 @@
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\PagesController.cs" />
     <Compile Include="Areas\Admin\Controllers\ShopController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\PagesController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
+    <Compile Include="Models\ViewModels\Cart\CartVM.cs" />
     <Compile Include="Models\ViewModels\Pages\ProductVM.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -886,6 +888,7 @@
     <Content Include="Views\Shop\CategoryMenuPartial.cshtml" />
     <Content Include="Views\Shop\Category.cshtml" />
     <Content Include="Views\Shop\ProductDetails.cshtml" />
+    <Content Include="Views\Cart\CartPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

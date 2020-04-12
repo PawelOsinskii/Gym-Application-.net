@@ -22,9 +22,10 @@
                 <ul class="nav navbar-nav">
                     @Html.Action("PagesMenuPartial", "Pages")
                 </ul>
-                <ul class="navbar-right">
-                    <li><a href="/" class="navbar-brand" target="_blank">CMS SHOP</a></li>
+                <ul class="nav navbar-nav navbar-right">
+                    @Html.Action("CartPartial", "Cart")
                 </ul>
+     
             </div>
         </div>
     </div>
