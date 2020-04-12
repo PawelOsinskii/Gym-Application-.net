@@ -9,7 +9,27 @@ namespace Projekcik.NETS.Controllers
         // GET: Cart
         public ActionResult Index()
         {
-            return View();
+
+            //inicjalizacja koszyka
+            var cart = Session["cart"] as List<CartVM> ?? new List<CartVM>();  //rzut na liste elementow a jesli nie ma to tworzy nową
+
+            // sprawdzamy czy koszyk jest pusty
+            if (cart.Count == 0 || Session["cart"] == null)
+            {
+                ViewBag.Message = "Twój koszyk jest pusty";
+                return View();
+            }
+
+            //obliczenie wartosci podsumuwującej koszyka i przekazanie do ViewBag
+            decimal total = 0m;
+            foreach(var item in cart)
+            {
+                total += item.Price;
+            }
+            ViewBag.GrandTotal = total;
+
+
+            return View(cart);
         }
 
 
