@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace Projekcik.NETS.Controllers
 {
@@ -32,6 +33,36 @@ namespace Projekcik.NETS.Controllers
             return View();
         }
 
+        // POST: Account/Login
+        [HttpPost]
+        public ActionResult Login(LoginUserVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            bool isValid = false;
+            using (Db db = new Db())
+            {
+                
+                //sprawdzamy login 
+               if(db.User.Any(x=>x.UserName.Equals(model.UserName) && x.Password.Equals(model.Password)))
+                {
+                    isValid = true;
+                }
+            }
+            if (!isValid)
+            {
+                ModelState.AddModelError("", "Nieprawidłowa nazwa użytkownika lub zapomniałeś hasła");
+                return View(model);
+            }
+            else
+            {
+                FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                return Redirect(FormsAuthentication.GetRedirectUrl(model.UserName, model.RememberMe));
+            }
+
+        }
 
         // GET: Account/create-account
         [HttpGet]
@@ -82,7 +113,7 @@ namespace Projekcik.NETS.Controllers
                 UserRoleDTO userRoleDTO = new UserRoleDTO()
                 {
                     UserId = userDTO.Id,
-                    RoleId = 2
+                    RoleId = 1
                 };
                 //dodanie roli
                 db.UserRoles.Add(userRoleDTO);
@@ -94,6 +125,16 @@ namespace Projekcik.NETS.Controllers
             TempData["SM"] = "Utworzyłeś konto, jeżeli chcesz korzystać w stuprocentach ze swojego kontaa i brac udział w naszych treningach, " +
                 "to polecamy kupić karnet";
             return Redirect("~/account/login");
+        }
+
+        // Post: Account/logout
+        [HttpPost]
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return Redirect("~/account/login");
+        }
+            
         }
     }
 }
