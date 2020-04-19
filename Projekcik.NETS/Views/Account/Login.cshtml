@@ -5,6 +5,12 @@
 }
 
 <h2>Logowanie</h2>
+@if(TempData["SM"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SM"]
+    </div>
+}
 
 @using (Html.BeginForm()) 
 {
@@ -43,7 +49,7 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Zaloguj" class="btn btn-default" />
-                <a href="~/account/create-account">Nie masz konta? Dołącz do nas!</a>
+                &nbsp; <a href="/account/create-account"> Nie masz konta? Dołącz do nas!</a>
             </div>
         </div>
     </div>
