@@ -1,0 +1,7 @@
+﻿@model Projekcik.NETS.Models.ViewModels.Account.UserNavPartialVM
+
+<a href="/account/user-profile">(@Model.FirstName @Model.LastName 
+    @if (Model.HasKarnet) { @Model.MamKarnet }
+    else{ @Model.NieMamKarnetu })
+    
+    </a>

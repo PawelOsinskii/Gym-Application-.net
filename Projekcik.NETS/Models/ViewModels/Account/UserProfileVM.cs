@@ -1,20 +1,16 @@
 ﻿using Projekcik.NETS.Models.Data;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace Projekcik.NETS.Models.ViewModels.Account
 {
-    
-    public class UserVM
+    public class UserProfileVM
     {
-        public UserVM()
+        public UserProfileVM()
         {
-                
+
         }
-        public UserVM(UserDTO dto)
+        public UserProfileVM(UserDTO dto)
         {
             Id = dto.Id;
             FirstName = dto.FirstName;
@@ -30,6 +26,8 @@ namespace Projekcik.NETS.Models.ViewModels.Account
             {
                 TimeFinish = dto.TimeFinish;
             }
+
+
 
         }
 

@@ -127,14 +127,59 @@ namespace Projekcik.NETS.Controllers
             return Redirect("~/account/login");
         }
 
-        // Post: Account/logout
-        [HttpPost]
+        // GET: /account/logout
+        [Authorize]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
+
             return Redirect("~/account/login");
         }
-            
+
+        public ActionResult UserNavpartial()
+        {
+            //pobieramy username 
+            string username = User.Identity.Name;
+            // deklarujemy model 
+            UserNavPartialVM model;
+            using(Db db = new Db())
+            {
+                //pobieramy użytkownika
+                UserDTO dto = db.User.FirstOrDefault(x => x.UserName == username);
+                model = new UserNavPartialVM()
+                {
+                    FirstName = dto.FirstName,
+                    LastName = dto.LastName,
+                    HasKarnet = dto.Karnet,
+                    MamKarnet = "Posiadasz Karnet",
+                    NieMamKarnetu = "Nie posiadasz karnetu"
+                    
+
+                };
+            }
+            return PartialView(model);
+        }
+
+
+        //GET: /account/user-profile
+        [ActionName("user-profile")]
+        public ActionResult UserProfile()
+        {
+            //pobieramy nazwe użytkownika
+            string username = User.Identity.Name;
+
+            //deklaruejmy VM
+
+            UserProfileVM model;
+            using(Db db = new Db())
+            {
+                //pobieramy użytkownika
+                UserDTO dto = db.User.FirstOrDefault(x => x.UserName == username);
+                model = new UserProfileVM(dto);
+
+            }
+
+            return View("UserProfile", model);
         }
     }
 }

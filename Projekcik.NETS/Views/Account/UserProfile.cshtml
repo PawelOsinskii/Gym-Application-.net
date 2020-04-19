@@ -1,10 +1,8 @@
-﻿@model Projekcik.NETS.Models.ViewModels.Account.UserVM
+﻿@model Projekcik.NETS.Models.ViewModels.Account.UserProfileVM
 
 @{
-    ViewBag.Title = "Zostań bykiem";
+    ViewBag.Title = "Profil Użytkownika";
 }
-
-<h2>Utwórz konto</h2>
 
 @if (TempData["SM"] != null)
 {
@@ -12,6 +10,7 @@
         @TempData["SM"]
     </div>
 }
+<h2>Profil Użytkownika</h2>
 
 @using (Html.BeginForm())
 {
@@ -21,9 +20,11 @@
 
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
         <div class="form-group">
 
-            <label class="control-label col-md-2">Imię</label>
+            <label class="control-label col-md-2" for="HasSidebar">Imię</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
@@ -31,7 +32,7 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">Nazwisko</label>
+            <label class="control-label col-md-2" for="HasSidebar">Nazwisko</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
@@ -39,43 +40,27 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">E-mail adress</label>
+            <label class="control-label col-md-2" for="HasSidebar">Adres E-mail</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.EmailAdress, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.EmailAdress, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2">Nazwa użytkownika</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">Hasło</label>
+            @Html.LabelFor(model => model.TimeFinish, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Potwierdź hasło</label>
-            <div class="col-md-10">
-                @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.TimeFinish, new { disabled = "disabled", @readonly = "readonly"  })
+                @Html.ValidationMessageFor(model => model.TimeFinish, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Utwórz konto!" class="btn btn-default" />
+                <input type="submit" value="Zmień dane" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
-
 
