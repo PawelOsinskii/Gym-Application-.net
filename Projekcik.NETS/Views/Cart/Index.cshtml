@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Koszyk Szczegóły";
+    int count = 1;
 }
 
 <h2>Szczegóły koszyka</h2>
@@ -12,7 +13,11 @@
 }
 else
 {
-
+    <div class="ajaxbg">
+        <span>
+<           <img src="~/Content/img/ajax-loader.gif" />
+        </span>
+    </div>
 
     <table class="table">
         <tr>
@@ -81,6 +86,26 @@ else
         </tr>
 
     </table>
+    <div class="paypaldiv">
+        <form class="paypalform" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+            <input type="hidden" name="cmd" value="_cart">
+            <input type="hidden" name="upload" value="1">
+            <input type="hidden" name="business" value="sb-ha5311569175@business.example.com">
+
+            @foreach (var item in Model)
+            {
+                <input type="hidden" name="item_name_@count" value="@item.ProductName">
+                <input type="hidden" name="amount_@count" value="@item.Price">
+                <input type="hidden" name="quantity_@count" value="@item.Quantity">
+                count++;
+            }
+
+            <input type="hidden" name="currency_code" value="PLN">
+            <input type="image" src="http://www.paypal.com/en_US/i/btn/x-click-but01.gif" name="submit" alt="Dokonuj płatności w systemie PayPal - jest szybki, bezpłatny i bezpieczny!">
+        </form>
+    </div>
+    <br />
+    <a href="#" class="placeorder btn btn-primary pull-right">Zapłać</a>
 }
 
 @section scripts{
@@ -89,7 +114,7 @@ else
 
 
 
-        
+
         $(function () {
             //incrementacja produktu
             $("a.incrproduct").click(function (e) {
@@ -116,9 +141,9 @@ else
 
 
 
-            /////////////////////////////////
+        /////////////////////////////////
 
-              
+
         $(function () {
             //zmniejszanie produktu
             $("a.decrproduct").click(function (e) {
@@ -136,17 +161,17 @@ else
                     else {
                         $("td.qty" + productId).html(data.qty);
 
-                    var price = data.qty * data.price;
-                    var priceHtml = price.toFixed(2) + " zł."
+                        var price = data.qty * data.price;
+                        var priceHtml = price.toFixed(2) + " zł."
 
-                    $("td.total" + productId).html(priceHtml);
+                        $("td.total" + productId).html(priceHtml);
 
-                    var gt = parseFloat($("td.grandTotal span").text());
-                    var grandtotal = (gt - data.price).toFixed(2);
-                    $("td.grandTotal span").text(grandtotal);
+                        var gt = parseFloat($("td.grandTotal span").text());
+                        var grandtotal = (gt - data.price).toFixed(2);
+                        $("td.grandTotal span").text(grandtotal);
 
                     }
-                    
+
 
                 });
 
@@ -155,11 +180,11 @@ else
         });
 
 
-       
 
 
 
-         $(function () {
+
+        $(function () {
             //usuwanie produktu
             $("a.removeproduct").click(function (e) {
                 e.preventDefault();
@@ -172,10 +197,10 @@ else
                 });
             });
 
-        //////////////
+            //////////////
         });
 
-           
+
 
 
     </script>

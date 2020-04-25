@@ -20,6 +20,15 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    @if (User.IsInRole("premiumUser"))
+                    {
+                        <li><a href="#">Przedłuż karnet</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="#">Kup karnet</a></li>
+                    }
+
                     @Html.Action("PagesMenuPartial", "Pages")
                     <li><a href="#">Zapisz się na trening</a></li>
                     <li> <a href="#">Skorzystaj z kalkulatora</a></li>
@@ -39,16 +48,13 @@
                             <li><a href="/account/login">Zaloguj się</a></li>
                         }
                     }
-                    @if (Request.IsAuthenticated && User.IsInRole("User"))
+                    @if (Request.IsAuthenticated)
                     {
-                        if (ViewBag.Title == "Profil uzytkownika")
-                        {
-                            <li class="active">@Html.Action("UserNavpartial", "Account", new { area = "" })</li>
-                        }
-                        else
-                        {
-
-                        }
+                       
+                        
+                            <li>@Html.Action("UserNavpartial", "Account", new { area = "" })</li>
+                        
+                       
 
                     }
 
