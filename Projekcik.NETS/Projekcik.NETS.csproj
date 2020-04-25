@@ -141,6 +141,8 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\PagesController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
+    <Compile Include="Models\Data\OrderDetailsDTO.cs" />
+    <Compile Include="Models\Data\OrderDTO.cs" />
     <Compile Include="Models\Data\RoleDTO.cs" />
     <Compile Include="Models\Data\UserDTO.cs" />
     <Compile Include="Models\Data\UserRoleDTO.cs" />

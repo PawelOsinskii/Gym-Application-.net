@@ -15,5 +15,7 @@ namespace Projekcik.NETS.Models.Data
         public DbSet<UserDTO> User { get; set; }
         public DbSet<RoleDTO> Role { get; set; }
         public DbSet<UserRoleDTO> UserRoles { get; set; }
+        public DbSet<OrderDTO> Orders { get; set; }
+        public DbSet<OrderDetailsDTO> OrderDetails { get; set; }
     }
 }
