@@ -181,5 +181,21 @@ namespace Projekcik.NETS.Controllers
 
             return View("UserProfile", model);
         }
+        [HttpPost]
+        [ActionName("user-profile")]
+        public ActionResult UserProfile(UserProfileVM model)
+        {
+            // sprawdzamyy state
+            if (ModelState.IsValid)
+            {
+                return View("UserProfile", model);
+            }
+            using(Db db = new Db())
+            {
+                
+
+            }
+            return View();
+        }
     }
 }

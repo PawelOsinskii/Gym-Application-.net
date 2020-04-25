@@ -42,9 +42,9 @@ namespace Projekcik.NETS.Models.ViewModels.Account
         public string EmailAdress { get; set; }
         [Required]
         public string UserName { get; set; }
-        [Required]
+        
         public string Password { get; set; }
-        [Required]
+        
         public string ConfirmPassword { get; set; }
         public Boolean Karnet { get; set; }
         public string TimeFinish { get; set; }
