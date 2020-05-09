@@ -133,6 +133,12 @@ else
                     var grandtotal = (gt + data.price).toFixed(2);
                     $("td.grandTotal span").text(grandtotal);
 
+                }).done(function (data) {
+                    var url2 = "/cart/PaypalPartial"
+                    $.get(url2, {}, function (data) {
+                        $('div.paypaldiv').html(data)
+
+                    });
                 });
             });
 
@@ -173,13 +179,18 @@ else
                     }
 
 
+                }).done(function (data) {
+                    var url2 = "/cart/PaypalPartial"
+                    $.get(url2, {}, function (data) {
+                        $('div.paypaldiv').html(data)
+
+                    });
+
                 });
 
             });
 
-        });
-
-
+         });
 
 
 
@@ -195,6 +206,13 @@ else
                     location.reload();
 
                 });
+            }).done(function (data) {
+                    var url2 = "/cart/PaypalPartial"
+                    $.get(url2, {}, function (data) {
+                        $('div.paypaldiv').html(data)
+
+                    });
+
             });
 
             //////////////

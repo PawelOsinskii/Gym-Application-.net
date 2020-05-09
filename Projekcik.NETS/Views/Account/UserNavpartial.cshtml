@@ -1,6 +1,6 @@
 ﻿@model Projekcik.NETS.Models.ViewModels.Account.UserNavPartialVM
 
-<a href="/account/user-profile">(@Model.FirstName @Model.LastName 
+<a href="/account/user-profile">(@Model.UserName
     @if (Model.HasKarnet) { @Model.MamKarnet }
     else{ @Model.NieMamKarnetu })
     

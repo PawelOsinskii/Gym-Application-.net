@@ -148,8 +148,7 @@ namespace Projekcik.NETS.Controllers
                 UserDTO dto = db.User.FirstOrDefault(x => x.UserName == username);
                 model = new UserNavPartialVM()
                 {
-                    FirstName = dto.FirstName,
-                    LastName = dto.LastName,
+                    UserName = dto.UserName,
                     HasKarnet = dto.Karnet,
                     MamKarnet = "Posiadasz Karnet",
                     NieMamKarnetu = "Nie posiadasz karnetu"
