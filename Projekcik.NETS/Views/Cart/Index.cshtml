@@ -15,7 +15,7 @@ else
 {
     <div class="ajaxbg">
         <span>
-<           <img src="~/Content/img/ajax-loader.gif" />
+          <img src="~/Content/img/ajax-loader.gif" />
         </span>
     </div>
 
@@ -140,7 +140,7 @@ else
 
                     });
                 });
-            });
+           
 
 
         });
@@ -150,7 +150,7 @@ else
         /////////////////////////////////
 
 
-        $(function () {
+        
             //zmniejszanie produktu
             $("a.decrproduct").click(function (e) {
                 e.preventDefault();
@@ -188,14 +188,14 @@ else
 
                 });
 
+          
+
             });
 
-         });
 
 
 
-
-        $(function () {
+        
             //usuwanie produktu
             $("a.removeproduct").click(function (e) {
                 e.preventDefault();
@@ -206,20 +206,30 @@ else
                     location.reload();
 
                 });
-            }).done(function (data) {
-                    var url2 = "/cart/PaypalPartial"
-                    $.get(url2, {}, function (data) {
-                        $('div.paypaldiv').html(data)
-
-                    });
-
             });
 
+            
+
             //////////////
+        
+
+        //składanie zamówienia
+        
+       
+            
+           $("a.placeorder").click(function (e) {
+                e.preventDefault();
+                var $this = $(this);         
+                var url = "/cart/PlaceOrder";
+                $(".ajaxbg").show();
+                $.post(url, { }, function (data) {
+                    $(".ajaxbg span").text("Dziękuję. Zostaniesz teraz przekierowany do systemu PayPal.");
+                    setTimeout(function () {
+                        $('form input[name="submit"]').click();
+                    }, 2000);
+                });
+            });
+            //////////////////////////////////////////////////////////////////
         });
-
-
-
-
     </script>
 }

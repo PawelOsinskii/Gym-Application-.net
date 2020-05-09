@@ -1,7 +1,10 @@
 ﻿using Projekcik.NETS.Models.Data;
 using Projekcik.NETS.Models.ViewModels.Cart;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web.Mvc;
 
 namespace Projekcik.NETS.Controllers
@@ -185,6 +188,65 @@ namespace Projekcik.NETS.Controllers
             List<CartVM> cart = Session["cart"] as List<CartVM>;
 
             return PartialView(cart);
+        }
+        [HttpPost]
+        public void PlaceOrder()
+        {
+            //pobieramy zawartośc koszyka ze zmiennej sesji
+            List<CartVM> cart = Session["cart"] as List<CartVM>;
+            //pobieramy nazwe użytkownika 
+
+            string UserName = User.Identity.Name;
+            // deklarujemy numer zamówienia
+            int orderId = 0;
+            
+            using(Db db = new Db())
+            {
+                // zainicjalizowac orderDTO
+                OrderDTO orderDto = new OrderDTO();
+
+                //pobieramy userId
+                var user = db.User.FirstOrDefault(x => x.UserName == UserName);
+                int userId = user.Id;
+                //ustawienie dto  i zapis 
+                orderDto.UserId = userId;
+                orderDto.CreatedAt = System.DateTime.Now;
+                db.Orders.Add(orderDto);
+                db.SaveChanges();
+                //pobieramy id zapisanego zamówienia 
+                orderId = orderDto.Id;
+
+
+                //inicjalizacja orderdetailsdto
+
+
+                OrderDetailsDTO detailsDto = new OrderDetailsDTO();
+                foreach(var item in cart)
+                {
+                    
+                    detailsDto.OrderId = orderId;
+                    detailsDto.UserId = userId;
+                    detailsDto.ProductId = item.ProductId;
+                    detailsDto.Quantity = item.Quantity;
+
+                    db.OrderDetails.Add(detailsDto);
+
+                    db.SaveChanges();
+                }
+                
+            }
+
+            // wysyłać email do administratora o złożonym zamówieniu
+            var client = new SmtpClient("smtp.mailtrap.io", 2525)
+            {
+                Credentials = new NetworkCredential("4437f0ed5b200f", "530c65931f5a99"),
+                EnableSsl = true
+            };
+            client.Send("admin@example.com", "admin@example.com", "Nowe zamówienie", "Masz nowe zamówienie! o id: "+ orderId+ " o dacie " + DateTime.Now);
+
+
+            // reset Session
+            Session["cart"] = null;
         }
         
     }

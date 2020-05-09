@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Projekcik.NETS.Models.Data
 {
-    [Table("tblOrderDetails")]
+    [Table("tblOrderDetail")]
     public class OrderDetailsDTO
     {
         [Key]
