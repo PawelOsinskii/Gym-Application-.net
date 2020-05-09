@@ -1,5 +1,6 @@
 ﻿using Projekcik.NETS.Models.Data;
 using Projekcik.NETS.Models.ViewModels.Account;
+using Projekcik.NETS.Models.ViewModels.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -195,6 +196,57 @@ namespace Projekcik.NETS.Controllers
 
             }
             return View();
+        }
+
+        //GET: /account/orders
+        public ActionResult Orders()
+        {
+            //inicjalziacja listy zamówień dla użytkownika
+            List<OrderForUserVM> ordersForUser = new List<OrderForUserVM>();
+            using(Db db = new Db())
+            {
+                //pobieramy userId 
+                UserDTO user = db.User.Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
+                int userId = user.Id;
+
+                //pobieramy zamowienia dla uzytkownika 
+                List<OrderVM> orders = db.Orders.Where(x => x.UserId == userId).ToArray().Select(x => new OrderVM(x)).ToList();
+                foreach(var order in orders)
+                {
+                    //inicjalizacja slownika produktów
+                    Dictionary<string, int> productsAndQty = new Dictionary<string, int>();
+                    decimal total = 0;
+
+                    // pobieramy szczegoly zamowienia 
+
+                    List<OrderDetailsDTO> orderDetailsDTO = db.OrderDetails.Where(x => x.OrderId == order.OrderId).ToList();
+                    
+                    foreach( var item in orderDetailsDTO)
+                    {
+                        //pobieramy produkt 
+                        ProductDTO product = db.Products.Where(x => x.Id == item.ProductId).FirstOrDefault();
+                        decimal price = product.Price;
+                        string name = product.Name;
+
+                        productsAndQty.Add(name, item.Quantity);
+                        total += item.Quantity * price;
+                       
+                    }
+                    ordersForUser.Add(new OrderForUserVM()
+                    {
+                        OrderNumber = order.OrderId,
+                        Total =  total,
+                        ProductsAndQty = productsAndQty,
+                        CreatedAt = order.CreateAdT
+                    });
+                }
+
+            }
+
+
+
+
+            return View(ordersForUser);
         }
     }
 }
