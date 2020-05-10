@@ -14,6 +14,7 @@ using System.Web.Mvc;
 
 namespace Projekcik.NETS.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class ShopController : Controller
     {
         // GET: Admin/Shop/Categories

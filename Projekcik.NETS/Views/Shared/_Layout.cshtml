@@ -22,16 +22,16 @@
                 <ul class="nav navbar-nav">
                     @if (User.IsInRole("premiumUser"))
                     {
-                        <li><a href="#">Przedłuż karnet</a></li>
+                        <li><a href="/shop/buycarnet">Przedłuż karnet</a></li>
                     }
                     else
                     {
-                        <li><a href="#">Kup karnet</a></li>
+                        <li><a href="/shop/buycarnet">Kup karnet</a></li>
                     }
 
                     @Html.Action("PagesMenuPartial", "Pages")
                     <li><a href="#">Zapisz się na trening</a></li>
-                    <li> <a href="#">Skorzystaj z kalkulatora</a></li>
+                    <li> <a href="/shop/calculators">Skorzystaj z kalkulatora</a></li>
                     @if (Request.IsAuthenticated)
                     {
                         <li><a href="/account/logout">Wyloguj się</a></li>

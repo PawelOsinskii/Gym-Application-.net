@@ -106,5 +106,21 @@ namespace Projekcik.NETS.Controllers
 
             return View("ProductDetails", model);
         }
+
+        public ActionResult Calculators()
+        {
+            return View();
+        }
+        public ActionResult BuyCarnet()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+        }
     }
 }

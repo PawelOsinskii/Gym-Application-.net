@@ -137,6 +137,7 @@ namespace Projekcik.NETS.Controllers
             return Redirect("~/account/login");
         }
 
+        [Authorize]
         public ActionResult UserNavpartial()
         {
             //pobieramy username 
@@ -162,6 +163,7 @@ namespace Projekcik.NETS.Controllers
 
 
         //GET: /account/user-profile
+        [Authorize]
         [ActionName("user-profile")]
         public ActionResult UserProfile()
         {
@@ -199,6 +201,7 @@ namespace Projekcik.NETS.Controllers
         }
 
         //GET: /account/orders
+        [Authorize]
         public ActionResult Orders()
         {
             //inicjalziacja listy zamówień dla użytkownika
@@ -247,6 +250,13 @@ namespace Projekcik.NETS.Controllers
 
 
             return View(ordersForUser);
+        }
+
+
+        //get /account/calculators
+        public ActionResult Calculators()
+        {
+            return View();
         }
     }
 }
