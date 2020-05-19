@@ -1,10 +1,10 @@
-﻿using Projekcik.NETS.Models.Data;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Projekcik.NETS.Models.Data;
 using Projekcik.NETS.Models.ViewModels.Account;
 using Projekcik.NETS.Models.ViewModels.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -19,7 +19,7 @@ namespace Projekcik.NETS.Controllers
         }
 
         // GET: Account/Login
-        
+
         public ActionResult Login()
         {
 
@@ -43,14 +43,26 @@ namespace Projekcik.NETS.Controllers
                 return View(model);
             }
             bool isValid = false;
+
+
+
             using (Db db = new Db())
             {
-                
-                //sprawdzamy login 
-               if(db.User.Any(x=>x.UserName.Equals(model.UserName) && x.Password.Equals(model.Password)))
+                try
                 {
-                    isValid = true;
+                    UserDTO dto = db.User.First(x => x.UserName == model.UserName);
+                    isValid = UserDTO.verifyPassword(model, dto);
                 }
+                catch (System.InvalidOperationException)
+                {
+                    isValid = false;
+                }
+
+
+                //sprawdzamy login 
+
+
+
             }
             if (!isValid)
             {
@@ -89,7 +101,7 @@ namespace Projekcik.NETS.Controllers
                 return View("CreateAccount", model);
             }
             //sprawdzenie czy nazwa użytkownika jest unikalna
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 if (db.User.Any(x => x.UserName.Equals(model.UserName)))
                 {
@@ -97,15 +109,16 @@ namespace Projekcik.NETS.Controllers
                     return View("CreateAccount", model);
                 }
                 //utworzenie użytkownika
+
                 UserDTO userDTO = new UserDTO()
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     EmailAdress = model.EmailAdress,
                     UserName = model.UserName,
-                    // todo tutaj trzeba dodać kodowanie hasła
-                    Password = model.Password
+
                 };
+                UserDTO.hashPass(model, userDTO);
                 db.User.Add(userDTO);
                 db.SaveChanges();
 
@@ -120,8 +133,8 @@ namespace Projekcik.NETS.Controllers
                 db.UserRoles.Add(userRoleDTO);
                 db.SaveChanges();
                 //tempdata
-                
-            
+
+
             }
             TempData["SM"] = "Utworzyłeś konto, jeżeli chcesz korzystać w stuprocentach ze swojego kontaa i brac udział w naszych treningach, " +
                 "to polecamy kupić karnet";
@@ -144,7 +157,7 @@ namespace Projekcik.NETS.Controllers
             string username = User.Identity.Name;
             // deklarujemy model 
             UserNavPartialVM model;
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 //pobieramy użytkownika
                 UserDTO dto = db.User.FirstOrDefault(x => x.UserName == username);
@@ -154,7 +167,7 @@ namespace Projekcik.NETS.Controllers
                     HasKarnet = dto.Karnet,
                     MamKarnet = "Posiadasz Karnet",
                     NieMamKarnetu = "Nie posiadasz karnetu"
-                    
+
 
                 };
             }
@@ -173,7 +186,8 @@ namespace Projekcik.NETS.Controllers
             //deklaruejmy VM
 
             UserProfileVM model;
-            using(Db db = new Db())
+
+            using (Db db = new Db())
             {
                 //pobieramy użytkownika
                 UserDTO dto = db.User.FirstOrDefault(x => x.UserName == username);
@@ -192,9 +206,9 @@ namespace Projekcik.NETS.Controllers
             {
                 return View("UserProfile", model);
             }
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
-                
+
 
             }
             return View();
@@ -206,7 +220,7 @@ namespace Projekcik.NETS.Controllers
         {
             //inicjalziacja listy zamówień dla użytkownika
             List<OrderForUserVM> ordersForUser = new List<OrderForUserVM>();
-            using(Db db = new Db())
+            using (Db db = new Db())
             {
                 //pobieramy userId 
                 UserDTO user = db.User.Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
@@ -214,7 +228,7 @@ namespace Projekcik.NETS.Controllers
 
                 //pobieramy zamowienia dla uzytkownika 
                 List<OrderVM> orders = db.Orders.Where(x => x.UserId == userId).ToArray().Select(x => new OrderVM(x)).ToList();
-                foreach(var order in orders)
+                foreach (var order in orders)
                 {
                     //inicjalizacja slownika produktów
                     Dictionary<string, int> productsAndQty = new Dictionary<string, int>();
@@ -223,8 +237,8 @@ namespace Projekcik.NETS.Controllers
                     // pobieramy szczegoly zamowienia 
 
                     List<OrderDetailsDTO> orderDetailsDTO = db.OrderDetails.Where(x => x.OrderId == order.OrderId).ToList();
-                    
-                    foreach( var item in orderDetailsDTO)
+
+                    foreach (var item in orderDetailsDTO)
                     {
                         //pobieramy produkt 
                         ProductDTO product = db.Products.Where(x => x.Id == item.ProductId).FirstOrDefault();
@@ -233,12 +247,12 @@ namespace Projekcik.NETS.Controllers
 
                         productsAndQty.Add(name, item.Quantity);
                         total += item.Quantity * price;
-                       
+
                     }
                     ordersForUser.Add(new OrderForUserVM()
                     {
                         OrderNumber = order.OrderId,
-                        Total =  total,
+                        Total = total,
                         ProductsAndQty = productsAndQty,
                         CreatedAt = order.CreateAdT
                     });
