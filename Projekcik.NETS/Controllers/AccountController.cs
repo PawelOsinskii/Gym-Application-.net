@@ -164,9 +164,7 @@ namespace Projekcik.NETS.Controllers
                 model = new UserNavPartialVM()
                 {
                     UserName = dto.UserName,
-                    HasKarnet = dto.Karnet,
-                    MamKarnet = "Posiadasz Karnet",
-                    NieMamKarnetu = "Nie posiadasz karnetu"
+                    HasKarnet = UserDTO.hasMemberShip(dto)
 
 
                 };

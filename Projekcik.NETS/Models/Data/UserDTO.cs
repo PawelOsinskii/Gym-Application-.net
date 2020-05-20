@@ -16,9 +16,16 @@ namespace Projekcik.NETS.Models.Data
         public string EmailAdress { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public Boolean Karnet { get; set; }
-        public string TimeFinish { get; set; }
+        
+        public System.Nullable<DateTime> TimeFinish { get; set; }
 
+        public static bool hasMemberShip(UserDTO user)
+        {
+            if (user.TimeFinish == null)
+                return false;
+            else
+                return DateTime.Compare((DateTime)user.TimeFinish, DateTime.Now) >= 0;
+        }
 
         private static string hashPassword(string username, string password)
         {

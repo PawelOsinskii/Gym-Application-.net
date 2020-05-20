@@ -22,13 +22,13 @@ namespace Projekcik.NETS.Models.ViewModels.Account
             EmailAdress = dto.EmailAdress;
             UserName = dto.UserName;
             Password = dto.Password;
-            if (!dto.Karnet)
+            if (!UserDTO.hasMemberShip(dto))
             {
                 TimeFinish = "brak karnetu";
             }
             else
             {
-                TimeFinish = dto.TimeFinish;
+                TimeFinish = dto.TimeFinish.ToString();
             }
 
         }
