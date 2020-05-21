@@ -122,5 +122,7 @@ namespace Projekcik.NETS.Controllers
                 return RedirectToAction("Login", "Account");
             }
         }
+
+
     }
 }

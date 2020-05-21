@@ -5,11 +5,40 @@ using Projekcik.NETS.Models.ViewModels.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
 
 namespace Projekcik.NETS.Controllers
 {
+    public class OrderUnit
+    {
+        [JsonPropertyName("amount")]
+        public OrderAmount Amount { get; set; }
+    }
+
+    public class OrderAmount
+    {
+        [JsonPropertyName("value")]
+        public string Value { get; set; }
+    }
+
+    public class OrderParameters
+    {
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
+        [JsonPropertyName("purchase_units")]
+        public List<OrderUnit> PurchaseUnits { get; set; }
+    }
+
+    public class AccesToken
+    {
+        [JsonPropertyName("access_token")]
+        public string AccessToken { get; set; }
+    }
     public class AccountController : Controller
     {
         // GET: Account
@@ -269,6 +298,67 @@ namespace Projekcik.NETS.Controllers
         public ActionResult Calculators()
         {
             return View();
+        }
+
+
+
+        [HttpPost]
+        async public Task<bool> Subscribe(string orderID)
+        {
+            string UserName = User.Identity.Name;
+
+            HttpClient client = new HttpClient();
+
+            var values = new Dictionary<string, string>
+            {
+                {"grant_type", "client_credentials" }
+            };
+            var content = new FormUrlEncodedContent(values);
+
+            var byteArray = new System.Text.UTF8Encoding().GetBytes("AeDjKrLsusKVxAL41eu2ek1emSQmilxNbdtMJ9yEMMabWWNPIBrDGq_fjxpC-yBWAq1Wk6ZMW5PipcoT:ECmcbxwOFJ2IqGzv5NKIxyoRx2HgE_tJhoPv3F4zoUJS3AR49Eiu8PIQ9YFrryUut4PYlugtLexmVkxI");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+            var response = await client.PostAsync("https://api.sandbox.paypal.com/v1/oauth2/token", content);
+            string responseString = await response.Content.ReadAsStringAsync();
+
+
+            AccesToken accessToken = JsonSerializer.Deserialize<AccesToken>(responseString);
+
+
+            HttpClient client2 = new HttpClient();
+
+            client2.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken.AccessToken);
+            var response2 = await client2.GetAsync("https://api.sandbox.paypal.com/v2/checkout/orders/" + orderID);
+
+            string responseString2 = await response2.Content.ReadAsStringAsync();
+            OrderParameters orderParameters = JsonSerializer.Deserialize<OrderParameters>(responseString2);
+
+
+            if (!orderParameters.Status.Equals("COMPLETED"))
+                return false;
+            int days = 0;
+            if (orderParameters.PurchaseUnits[0].Amount.Value.Equals("99.00")) 
+                days = 30;
+            if (orderParameters.PurchaseUnits[0].Amount.Value.Equals("179.00"))
+                days = 60;
+            if (orderParameters.PurchaseUnits[0].Amount.Value.Equals("250.00"))
+                days = 90;
+
+            using (Db db = new Db())
+            {
+                var user = db.User.FirstOrDefault(x => x.UserName == UserName);
+                int userId = user.Id;
+                //ustawienie dto  i zapis 
+                if (!user.TimeFinish.HasValue)
+                    user.TimeFinish = DateTime.Now.AddDays(days);
+                else
+                    user.TimeFinish = ((DateTime)user.TimeFinish).AddDays(days);
+
+
+                db.SaveChanges();
+            }
+
+            return true;
         }
     }
 }

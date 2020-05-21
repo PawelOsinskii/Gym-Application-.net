@@ -18,7 +18,7 @@ namespace Projekcik.NETS.Models.ViewModels.Account
             EmailAdress = dto.EmailAdress;
             UserName = dto.UserName;
             Password = dto.Password;
-            if (UserDTO.hasMemberShip(dto))
+            if (!UserDTO.hasMemberShip(dto))
             {
                 TimeFinish = "brak karnetu";
             }
