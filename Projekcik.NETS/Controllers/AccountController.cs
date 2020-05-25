@@ -337,7 +337,7 @@ namespace Projekcik.NETS.Controllers
             if (!orderParameters.Status.Equals("COMPLETED"))
                 return false;
             int days = 0;
-            if (orderParameters.PurchaseUnits[0].Amount.Value.Equals("99.00")) 
+            if (orderParameters.PurchaseUnits[0].Amount.Value.Equals("99.00"))
                 days = 30;
             if (orderParameters.PurchaseUnits[0].Amount.Value.Equals("179.00"))
                 days = 60;
@@ -359,6 +359,86 @@ namespace Projekcik.NETS.Controllers
             }
 
             return true;
+        }
+
+        [Authorize]
+        public ActionResult ChangePassword()
+        {
+
+            //pobieramy nazwe użytkownika
+            string username = User.Identity.Name;
+
+            //deklaruejmy VM
+            UserProfileVM model;
+
+            using (Db db = new Db())
+            {
+                //pobieramy użytkownika
+                UserDTO dto = db.User.FirstOrDefault(x => x.UserName == username);
+                model = new UserProfileVM(dto);
+
+            }
+
+            return View("ChangePassword");
+
+        }
+
+        [HttpPost]
+        [ActionName("changepassword")]
+        public ActionResult ChangePassword(UserProfileVM model)
+        {
+            try
+            {
+                if (model.Password.Length > 0 || model.ConfirmPassword.Length > 0 || model.OldPassword.Length > 0)
+                {
+
+                }
+            }
+            catch (NullReferenceException)
+            {
+                ModelState.AddModelError("", "Wypełnij wszystkie pola");
+                return View("ChangePassword", model);
+            }
+
+            bool isValid = false;
+            string username = User.Identity.Name;
+            using (Db db = new Db())
+            {
+
+                try
+                {
+                    UserDTO dto = db.User.First(x => x.UserName == username);
+                    isValid = UserDTO.verifyPassword(username, model, dto);
+                }
+                catch (System.InvalidOperationException)
+                {
+                    isValid = false;
+                }
+            }
+            if (!isValid)
+            {
+                ModelState.AddModelError("", "Nieprawidłowe stare hasło");
+                return View("ChangePassword", model);
+            }
+            if (!model.Password.Equals(model.ConfirmPassword))
+            {
+                ModelState.AddModelError("", "hasła nie są identyczne");
+                return View("ChangePassword", model);
+            }
+
+            using (Db db = new Db())
+            {
+
+
+                UserDTO dto2 = db.User.First(x => x.UserName == username);
+                UserDTO.hashPass(username, model, dto2);
+                db.SaveChanges();
+            }
+
+
+
+            TempData["SM"] = "Zmieniłeś hasło";
+            return Redirect("~/account/changepassword");
         }
     }
 }

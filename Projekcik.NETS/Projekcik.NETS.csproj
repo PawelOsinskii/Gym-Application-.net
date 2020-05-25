@@ -1037,6 +1037,7 @@
     <Content Include="Views\Account\Orders.cshtml" />
     <Content Include="Views\Shop\Calculators.cshtml" />
     <Content Include="Views\Shop\BuyCarnet.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

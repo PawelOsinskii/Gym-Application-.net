@@ -50,7 +50,16 @@ namespace Projekcik.NETS.Models.Data
 
             userdto.Password = UserDTO.hashPassword(user.UserName, user.Password);
         }
+        public static bool verifyPassword(string username, UserProfileVM user, UserDTO userdto)
+        {
 
+            return UserDTO.hashPassword(username, user.OldPassword) == userdto.Password;
+        }
+        public static void hashPass(string username, UserProfileVM user, UserDTO userdto)
+        {
 
+            userdto.Password = UserDTO.hashPassword(username, user.Password);
+        }
+        
     }
 }

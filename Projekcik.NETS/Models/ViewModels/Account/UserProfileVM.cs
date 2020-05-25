@@ -42,10 +42,13 @@ namespace Projekcik.NETS.Models.ViewModels.Account
         public string EmailAdress { get; set; }
         [Required]
         public string UserName { get; set; }
-        
+        [Display(Name = "Hasło")]
         public string Password { get; set; }
-        
+        [Display(Name = "Potwierdź hasło")]
         public string ConfirmPassword { get; set; }
+        [Display(Name = "obecne hasło")]
+        public string OldPassword { get; set; }
+
         public string TimeFinish { get; set; }
     }
 }
