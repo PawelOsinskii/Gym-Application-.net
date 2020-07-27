@@ -21,14 +21,11 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     
-                    @if (User.IsInRole("premiumUser"))
-                    {
-                        <li><a href="/shop/buycarnet">Przedłuż karnet</a></li>
-                    }
-                    else
-                    {
+                    
+                        
+                   
                         <li><a href="/shop/buycarnet">Kup karnet</a></li>
-                    }
+                    
 
                     @Html.Action("PagesMenuPartial", "Pages")
                     <li><a href="#">Zapisz się na trening</a></li>
